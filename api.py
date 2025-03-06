@@ -6,7 +6,6 @@ from datetime import timedelta
 import requests
 
 
-
 def get_AI_news():
 
     #load api key 
@@ -27,6 +26,7 @@ def get_AI_news():
                                             language='en', 
                                             from_param=f"{str(two_days_ago)}",
                                             to=f"{str(today)}",
+                                            sort_by='relevancy'
                                             )
     
     if(top_headlines_AI["status"] == "ok" and len(top_headlines_AI["articles"]) > 0):
@@ -38,6 +38,7 @@ def get_AI_news():
 
     
 
+#converst JSON into a news string
 
 def format_news(news_JSON):
      
@@ -52,7 +53,6 @@ def format_news(news_JSON):
             current_article_num += 1
 
          return news_string
-
    
      else:
 
@@ -65,6 +65,8 @@ def format_news(news_JSON):
 
         return news_string
      
+
+# shorten the url 
 
 def shorten(url):
   base_url = 'http://tinyurl.com/api-create.php?url='

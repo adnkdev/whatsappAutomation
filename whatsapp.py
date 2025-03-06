@@ -1,9 +1,11 @@
 import pywhatkit
 from datetime import *
 
-def send_news_whatsapp(new_str):
+#send whatsapp information to group chat
 
-    hour = int(datetime.now().hour)
-    min = int(datetime.now().minute + 1)
+def send_news_whatsapp(group_id, new_str):
+
+    curr_hour = int(datetime.now().hour)
+    cur_min = int(datetime.now().minute + 1)
     
-    pywhatkit.sendwhatmsg("+61433794469", new_str, hour, min)
+    pywhatkit.sendwhatmsg_to_group(group_id, new_str, curr_hour, cur_min)
