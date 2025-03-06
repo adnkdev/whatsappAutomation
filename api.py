@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 from datetime import timedelta
+import requests
 
 
 
@@ -21,28 +22,59 @@ def get_AI_news():
     two_days_ago = today - timedelta(days=2)
 
 
-    # /v2/top-headlines
-    top_headlines_AI = newsapi.get_everything(q='AI',
-                                            language='en', 
-                                            from_param=f"{str(two_days_ago)}",
-                                            to=f"{str(today)}",
-                                            )
-
-    top_headlines_AIcompany = newsapi.get_everything(q='AI company',
+    # retrieve AI news from news API
+    top_headlines_AI = newsapi.get_everything(q='AI company',
                                             language='en', 
                                             from_param=f"{str(two_days_ago)}",
                                             to=f"{str(today)}",
                                             )
     
-    format_news(top_headlines_AI)
+    if(top_headlines_AI["status"] == "ok" and len(top_headlines_AI["articles"]) > 0):
 
+        return format_news(top_headlines_AI["articles"])
+    else:
+        return "something went wrong with API"
+
+
+    
 
 
 def format_news(news_JSON):
+     
+     news_string = '*AI News Today*\n\n'
+     current_article_num = 1
 
-     for article in news_JSON["articles"]:
-        print(f"{article["title"]}\n")
-        print(f"{article["url"]}\n\n")
+     if len(news_JSON) < 10: 
+         
+         for article in news_JSON :
+             
+            news_string += f"{current_article_num}. {article["title"]}\n{article["url"]}\n"
+            current_article_num += 1
+
+         return news_string
+
+   
+     else:
+
+        for article in news_JSON :
+
+            if "AI" in article["title"] and "Research" not in article["title"] and current_article_num < 11:
+
+                news_string += f"{current_article_num}. {article["title"]}\n{shorten(article["url"])}\n"
+                current_article_num += 1
+
+        return news_string
+     
+
+def shorten(url):
+  base_url = 'http://tinyurl.com/api-create.php?url='
+  response = requests.get(base_url+url)
+  short_url = response.text
+  return short_url
+
+
+
+    
 
 
 

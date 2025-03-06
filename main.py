@@ -1,7 +1,8 @@
 from api import *
+from whatsapp import *
 
 def main():
-    get_AI_news()
+    send_news_whatsapp(get_AI_news())
 
 
 if __name__ == '__main__':
